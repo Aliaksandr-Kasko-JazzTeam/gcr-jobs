@@ -2,8 +2,11 @@
   "name": "gcr-jobs",
   "version": "1.0.0",
   "description": "Helper for usage Google Cloud Run Jobs",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Aliaksandr-Kasko-JazzZeam/gcr-jobs"
