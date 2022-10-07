@@ -5,8 +5,9 @@ Allows you to run job and check if job is currently running.
 
 ## Table of Contents
 
-- [Install](#Install)
-- [Usage](#Usage)
+- [Install](#install)
+- [Usage](#usage)
+- [License](#license)
 
 ## Install
 
@@ -35,9 +36,6 @@ const result = await jobs.runJob(JOB_ID);
 // check if job is currently running
 const isJobRunning = await jobs.isJobRunning(JOB_ID);
 ```
-
-## Credits
-
 
 ## License
 
