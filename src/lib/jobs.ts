@@ -1,6 +1,5 @@
 import {Axios, AxiosRequestConfig} from "axios";
 import {getAuthHeader} from "./util/auth";
-import {wait} from "./util/time";
 
 const scopes = [ 'https://www.googleapis.com/auth/cloud-platform' ];
 const JOBS_API_HOST = "https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/";
@@ -26,20 +25,17 @@ export class Jobs {
       labelSelector: `run.googleapis.com/job=${jobId}`
     };
     const axios = new Axios({});
-    while (true) {
-      try {
-        const response = await axios.get(JOBS_API_HOST + this.projectName + '/executions', config);
-        const data = JSON.parse(response.data);
-        if (data.items?.length > 0) {
-          const runningCount = data.items[0]?.status?.runningCount || 0;
-          return runningCount > 0;
-        } else return false;
-      } catch (e) {
-        await wait(10 * 1000);
-      }
+    try {
+      const response = await axios.get(JOBS_API_HOST + this.projectName + '/executions', config);
+      const data = JSON.parse(response.data);
+      if (data.items?.length > 0) {
+        const runningCount = data.items[0]?.status?.runningCount || 0;
+        return runningCount > 0;
+      } else return false;
+    } catch (e: any) {
+      throw Error(e.message);
     }
   }
-  
   async runJob(jobId: string): Promise<boolean> {
     try {
       const config = await getAxiosConfig(this.projectName, this.serviceAccount);
