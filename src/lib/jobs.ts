@@ -1,5 +1,6 @@
 import {Axios, AxiosRequestConfig} from "axios";
 import {getAuthHeader} from "./util/auth";
+import {Job, ListJobsResponse} from "./types";
 
 const scopes = [ 'https://www.googleapis.com/auth/cloud-platform' ];
 const JOBS_API_HOST = "https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/";
@@ -45,5 +46,19 @@ export class Jobs {
     } catch (e) {
       return false;
     }
+  }
+  
+  async listJobs(): Promise<ListJobsResponse> {
+    const config = await getAxiosConfig(this.projectName, this.serviceAccount);
+    const axios = new Axios({});
+    const {data} = await axios.get<ListJobsResponse>(JOBS_API_HOST + this.projectName + '/jobs', config);
+    return data;
+  }
+  
+  async getJob(jobId: string): Promise<Job> {
+    const config = await getAxiosConfig(this.projectName, this.serviceAccount);
+    const axios = new Axios({});
+    const {data} = await axios.get<Job>(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
+    return data;
   }
 }
