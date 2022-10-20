@@ -37,11 +37,12 @@ export class Jobs {
       throw Error(e.message);
     }
   }
+
   async runJob(jobId: string): Promise<boolean> {
     try {
       const config = await getAxiosConfig(this.projectName, this.serviceAccount);
       const axios = new Axios({});
-      await axios.post(JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run', {}, config);
+      await axios.post(JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run', Buffer.from("{}"), config);
       return true;
     } catch (e) {
       return false;

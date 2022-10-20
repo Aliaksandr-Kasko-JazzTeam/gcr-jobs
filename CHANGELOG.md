@@ -1,3 +1,7 @@
+#### 1.0.4
+- Fix run job
+- Add tests
+
 #### 1.0.3
 - Add listJobs
 - Add getJob
