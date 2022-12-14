@@ -19,8 +19,13 @@ describe('gcr-jobs', () => {
     expect(job).to.not.empty;
   }).timeout(10000);
   
-  it('expect job successful run', async () => {
-    const runJob = await jobs.runJob(process.env.JOB_NAME);
-    expect(runJob).to.equal(true);
+  it('check job is running', async () => {
+    const isJobRunning = await jobs.isJobRunning(process.env.JOB_NAME);
+    expect(isJobRunning).to.equal(false);
   }).timeout(10000);
+  
+  // it('expect job successful run', async () => {
+  //   const runJob = await jobs.runJob(process.env.JOB_NAME);
+  //   expect(runJob).to.equal(true);
+  // }).timeout(10000);
 });

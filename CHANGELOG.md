@@ -1,3 +1,9 @@
+#### 1.0.6
+- Fix runJob
+
+#### 1.0.5
+- Fix isJobRunning
+
 #### 1.0.4
 - Fix run job
 - Add tests

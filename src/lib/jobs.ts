@@ -42,8 +42,8 @@ export class Jobs {
     try {
       const config = await getAxiosConfig(this.projectName, this.serviceAccount);
       const axios = new Axios({});
-      await axios.post(JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run', Buffer.from("{}"), config);
-      return true;
+      const response = await axios.post(JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run', "", config);
+      return response.status == 200;
     } catch (e) {
       return false;
     }
