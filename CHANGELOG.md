@@ -1,3 +1,7 @@
+#### 1.1.0
+- Fix response for listJobs and getJob
+- Add listExecutions, getJobExecutionHealth
+
 #### 1.0.6
 - Fix runJob
 

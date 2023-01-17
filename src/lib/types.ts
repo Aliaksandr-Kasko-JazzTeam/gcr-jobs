@@ -169,7 +169,7 @@ export type JobStatus = {
 
 export type Condition = {
   type: string;
-  status: string;
+  status: "True" | "False" | "Unknown";
   reason?: string;
   message?: string;
   lastTransitionTime?: string;
@@ -181,4 +181,39 @@ export type ExecutionReference = {
   creationTimestamp?: string;
   completionTimestamp?: string;
   
+}
+
+export type ListExecutionsResponse = {
+  items: Execution[];
+  apiVersion: string;
+  kind: string;
+  metadata: ListMeta;
+  unreachable: string[];
+}
+
+export type Execution = {
+  apiVersion?: string;
+  kind?: string;
+  metadata?: ObjectMeta;
+  spec?: ExecutionSpec;
+  status?: ExecutionStatus;
+}
+
+export type ExecutionStatus = {
+  observedGeneration?: number;
+  conditions?: Condition[];
+  startTime?: string;
+  completionTime?: string;
+  runningCount?: number;
+  succeededCount?: number;
+  failedCount?: number;
+  cancelledCount?: number;
+  retriedCount?: number;
+  logUri?: string;
+}
+
+export type JobExecutionHealth = {
+  executionCount: number;
+  lastFailedCount: number;
+  lastExecutionStatus: "True" | "False" | "Unknown"
 }

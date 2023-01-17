@@ -1,6 +1,6 @@
 import {Axios, AxiosRequestConfig} from "axios";
 import {getAuthHeader} from "./util/auth";
-import {Job, ListJobsResponse} from "./types";
+import {Job, JobExecutionHealth, ListExecutionsResponse, ListJobsResponse} from "./types";
 
 const scopes = [ 'https://www.googleapis.com/auth/cloud-platform' ];
 const JOBS_API_HOST = "https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/";
@@ -52,14 +52,38 @@ export class Jobs {
   async listJobs(): Promise<ListJobsResponse> {
     const config = await getAxiosConfig(this.projectName, this.serviceAccount);
     const axios = new Axios({});
-    const {data} = await axios.get<ListJobsResponse>(JOBS_API_HOST + this.projectName + '/jobs', config);
-    return data;
+    const {data} = await axios.get(JOBS_API_HOST + this.projectName + '/jobs', config);
+    return JSON.parse(data);
   }
   
   async getJob(jobId: string): Promise<Job> {
     const config = await getAxiosConfig(this.projectName, this.serviceAccount);
     const axios = new Axios({});
-    const {data} = await axios.get<Job>(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
-    return data;
+    const {data} = await axios.get(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
+    const parsedData = JSON.parse(data);
+    if (parsedData.error) throw Error(JSON.stringify(parsedData.error));
+    return parsedData;
+  }
+  
+  async listExecutions(jobId: string): Promise<ListExecutionsResponse> {
+    const config = await getAxiosConfig(this.projectName, this.serviceAccount);
+    config.params = {
+      labelSelector: `run.googleapis.com/job=${jobId}`
+    };
+    const axios = new Axios({});
+    const {data} = await axios.get(JOBS_API_HOST + this.projectName + '/executions', config);
+    return JSON.parse(data);
+  }
+  
+  async getJobExecutionHealth(jobId: string, take: number): Promise<JobExecutionHealth> {
+    if (take <= 0) throw new Error("take must be positive");
+    const job = await this.getJob(jobId);
+    const listExecutions = await this.listExecutions(jobId);
+    
+    return {
+      executionCount: job.status?.executionCount || 0,
+      lastFailedCount: listExecutions.items.slice(0, take).filter(execution => (execution.status?.failedCount || 0) > 0).length,
+      lastExecutionStatus: listExecutions.items[0].status?.conditions?.find(condition => condition.type == "Completed")?.status || "Unknown" 
+    }
   }
 }

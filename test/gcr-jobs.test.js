@@ -1,5 +1,6 @@
 const mocha = require('mocha');
 const chai = require('chai');
+chai.use(require('chai-as-promised'))
 
 const {Jobs} = require('../dist');
 
@@ -22,6 +23,24 @@ describe('gcr-jobs', () => {
   it('check job is running', async () => {
     const isJobRunning = await jobs.isJobRunning(process.env.JOB_NAME);
     expect(isJobRunning).to.equal(false);
+  }).timeout(10000);
+  
+  it('should receive executions list for a single job', async () => {
+    const listExecutions = await jobs.listExecutions(process.env.JOB_NAME);
+    expect(listExecutions).to.not.empty;
+  }).timeout(10000);
+  
+  it('should receive job execution health', async () => {
+    const jobExecutionHealth = await jobs.getJobExecutionHealth(process.env.JOB_NAME, 10);
+    expect(jobExecutionHealth).to.not.empty;
+  }).timeout(10000);
+  
+  it('should throw an error on not found job', async () => {
+    expect(jobs.getJob("_")).to.be.rejectedWith(Error);
+  }).timeout(10000);
+  
+  it('should throw an error on wrong take', async () => {
+    expect(jobs.getJobExecutionHealth("", -1)).to.be.rejectedWith(Error);
   }).timeout(10000);
   
   // it('expect job successful run', async () => {
