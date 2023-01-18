@@ -1,3 +1,6 @@
+#### 1.1.1
+- Update JobExecutionHealth response with startTime and completionTime
+
 #### 1.1.0
 - Fix response for listJobs and getJob
 - Add listExecutions, getJobExecutionHealth

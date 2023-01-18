@@ -215,5 +215,7 @@ export type ExecutionStatus = {
 export type JobExecutionHealth = {
   executionCount: number;
   lastFailedCount: number;
-  lastExecutionStatus: "True" | "False" | "Unknown"
+  lastExecutionStatus: "True" | "False" | "Unknown";
+  startTime?: string;
+  completionTime?: string;
 }

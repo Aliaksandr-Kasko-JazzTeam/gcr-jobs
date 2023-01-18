@@ -80,10 +80,13 @@ export class Jobs {
     const job = await this.getJob(jobId);
     const listExecutions = await this.listExecutions(jobId);
     
+    
     return {
       executionCount: job.status?.executionCount || 0,
       lastFailedCount: listExecutions.items.slice(0, take).filter(execution => (execution.status?.failedCount || 0) > 0).length,
-      lastExecutionStatus: listExecutions.items[0].status?.conditions?.find(condition => condition.type == "Completed")?.status || "Unknown" 
+      lastExecutionStatus: listExecutions.items[0].status?.conditions?.find(condition => condition.type == "Completed")?.status || "Unknown",
+      startTime: listExecutions.items[0].status?.startTime,
+      completionTime: listExecutions.items[0].status?.completionTime
     }
   }
 }
