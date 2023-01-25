@@ -1,3 +1,6 @@
+#### 1.1.2
+- Fix getJobExecutionHealth when no executions yet
+
 #### 1.1.1
 - Update JobExecutionHealth response with startTime and completionTime
 

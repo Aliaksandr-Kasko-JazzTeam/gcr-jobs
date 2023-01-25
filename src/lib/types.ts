@@ -184,7 +184,7 @@ export type ExecutionReference = {
 }
 
 export type ListExecutionsResponse = {
-  items: Execution[];
+  items?: Execution[];
   apiVersion: string;
   kind: string;
   metadata: ListMeta;
