@@ -2,13 +2,25 @@ const mocha = require('mocha');
 const chai = require('chai');
 chai.use(require('chai-as-promised'))
 
-const {Jobs} = require('../dist');
+const {Jobs, Job} = require('../dist');
 
 const expect = chai.expect;
 
 describe('gcr-jobs', () => {
   
   const jobs = new Jobs(process.env.PROJECT_NAME, process.env.SERVICE_ACCOUNT);
+  const jobName = "test";
+  const image = "us-docker.pkg.dev/cloudrun/container/job:latest";
+  
+  it('should create job', async () => {
+    const createdJob = await jobs.createJob({
+      jobName,
+      image
+    });
+    expect(createdJob).to.not.null;
+    expect(createdJob.metadata.name).to.equal(jobName);
+    expect(createdJob.spec.template.spec.template.spec.containers[0].image).to.equal(image);
+  }).timeout(20000);
   
   it('should receive jobs list', async () => {
     const listJobs = await jobs.listJobs();
@@ -20,7 +32,7 @@ describe('gcr-jobs', () => {
     expect(job).to.not.empty;
   }).timeout(10000);
   
-  it('check job is running', async () => {
+  it('should check job is running', async () => {
     const isJobRunning = await jobs.isJobRunning(process.env.JOB_NAME);
     expect(isJobRunning).to.equal(false);
   }).timeout(10000);
@@ -34,6 +46,11 @@ describe('gcr-jobs', () => {
     const jobExecutionHealth = await jobs.getJobExecutionHealth(process.env.JOB_NAME, 10);
     expect(jobExecutionHealth).to.not.empty;
   }).timeout(10000);
+  
+  it('should delete a job', async () => {
+    const operation = await jobs.deleteJob(jobName);
+    expect(operation.done).to.equal(true);
+  }).timeout(20000);
   
   it('should throw an error on not found job', async () => {
     expect(jobs.getJob("_")).to.be.rejectedWith(Error);

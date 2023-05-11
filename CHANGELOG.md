@@ -1,3 +1,7 @@
+#### 1.2.0
+- Add createJob
+- Add deleteJob
+
 #### 1.1.2
 - Fix getJobExecutionHealth when no executions yet
 

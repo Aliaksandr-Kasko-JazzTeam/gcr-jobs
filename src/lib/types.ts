@@ -73,7 +73,7 @@ export type KeyToPath = {
 }
 
 export type Container = {
-  name: string;
+  name?: string;
   image: string;
   command?: string[];
   args?: string[];
@@ -218,4 +218,30 @@ export type JobExecutionHealth = {
   lastExecutionStatus: "True" | "False" | "Unknown";
   startTime?: string;
   completionTime?: string;
+}
+
+export type Operation = {
+  name: string;
+  metadata: object;
+  done: boolean;
+  error?: Status;
+  response?: object;
+}
+
+export type Status = {
+  code: number;
+  message?: string;
+  details?: object[];
+}
+
+export type CreateJobArgs = {
+  jobName: string;
+  image: string;
+  command: string[];
+  args: string[];
+  env: EnvVar[];
+  timeoutSeconds?: number;
+  maxRetries?: number;
+  cpu?: "1000m"|"2000m"|"4000m";
+  memory?: "512Mi" | "1Gi" | "2Gi" | "4Gi" | "8Gi" | "16Gi"
 }

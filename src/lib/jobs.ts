@@ -1,6 +1,6 @@
 import {Axios, AxiosRequestConfig} from "axios";
 import {getAuthHeader} from "./util/auth";
-import {Job, JobExecutionHealth, ListExecutionsResponse, ListJobsResponse} from "./types";
+import {CreateJobArgs, Job, JobExecutionHealth, ListExecutionsResponse, ListJobsResponse, Operation} from "./types";
 
 const scopes = [ 'https://www.googleapis.com/auth/cloud-platform' ];
 const JOBS_API_HOST = "https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/";
@@ -17,6 +17,65 @@ export class Jobs {
   constructor(projectName: string, serviceAccount: string) {
     this.projectName = projectName;
     this.serviceAccount = serviceAccount;
+  }
+  
+  async createJob(createJobArgs: CreateJobArgs): Promise<Job> {
+    const {
+      jobName,
+      image,
+      command = [],
+      args = [],
+      env = [],
+      timeoutSeconds = 600,
+      maxRetries = 3,
+      cpu = "1000m",
+      memory = "512Mi"
+    } = createJobArgs;
+    const config = await getAxiosConfig(this.projectName, this.serviceAccount);
+    config.headers!["Content-Type"] = 'application/json';
+    const body = {
+      apiVersion: "run.googleapis.com/v1",
+      kind: "Job",
+      metadata: {
+        name: jobName,
+        namespace: this.serviceAccount.split('-')[0],
+        generation: 2
+      },
+      spec: {
+        template: {
+          spec: {
+            taskCount: 1,
+            template: {
+              spec: {
+                containers: [
+                  {
+                    image,
+                    command,
+                    args,
+                    env,
+                    resources: {
+                      limits: {
+                        cpu,
+                        memory
+                      }
+                    },
+                    
+                  }
+                ],
+                timeoutSeconds: timeoutSeconds.toString(),
+                serviceAccountName: this.serviceAccount,
+                maxRetries
+              }
+            }
+          }
+        }
+      }
+    } as Job;
+    const axios = new Axios({});
+    const {data} = await axios.post(JOBS_API_HOST + this.projectName + '/jobs', JSON.stringify(body), config);
+    const parsedData = JSON.parse(data);
+    if (parsedData.error) throw Error(JSON.stringify(parsedData.error));
+    return parsedData;
   }
   
   async isJobRunning(jobId: string): Promise<boolean> {
@@ -61,6 +120,15 @@ export class Jobs {
     const axios = new Axios({});
     const {data} = await axios.get(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
     const parsedData = JSON.parse(data);
+    if (parsedData.error) throw Error(JSON.stringify(parsedData.error));
+    return parsedData;
+  }
+  
+  async deleteJob(jobId: string): Promise<Operation> {
+    const config = await getAxiosConfig(this.projectName, this.serviceAccount);
+    const axios = new Axios({});
+    const axiosResponse = await axios.delete(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
+    const parsedData = JSON.parse(axiosResponse.data);
     if (parsedData.error) throw Error(JSON.stringify(parsedData.error));
     return parsedData;
   }
