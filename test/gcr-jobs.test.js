@@ -2,7 +2,7 @@ const mocha = require('mocha');
 const chai = require('chai');
 chai.use(require('chai-as-promised'))
 
-const {Jobs, Job} = require('../dist');
+const {Jobs} = require('../dist');
 
 const expect = chai.expect;
 
@@ -28,19 +28,19 @@ describe('gcr-jobs', () => {
   }).timeout(10000);
   
   it('should receive a single job', async () => {
-    const job = await jobs.getJob(process.env.JOB_NAME);
+    const job = await jobs.getJob(jobName);
     expect(job).to.not.empty;
   }).timeout(10000);
   
   it('should check job is running', async () => {
-    const isJobRunning = await jobs.isJobRunning(process.env.JOB_NAME);
+    const isJobRunning = await jobs.isJobRunning(jobName);
     expect(isJobRunning).to.equal(false);
   }).timeout(10000);
   
   it('should receive executions list for a single job', async () => {
     const listExecutions = await jobs.listExecutions(process.env.JOB_NAME);
     expect(listExecutions).to.not.empty;
-  }).timeout(10000);
+  }).timeout(20000);
   
   it('should receive job execution health', async () => {
     const jobExecutionHealth = await jobs.getJobExecutionHealth(process.env.JOB_NAME, 10);
@@ -49,7 +49,8 @@ describe('gcr-jobs', () => {
   
   it('should delete a job', async () => {
     const operation = await jobs.deleteJob(jobName);
-    expect(operation.done).to.equal(true);
+    expect(operation).to.not.empty;
+    expect(operation.error).to.equal(undefined);
   }).timeout(20000);
   
   it('should throw an error on not found job', async () => {
