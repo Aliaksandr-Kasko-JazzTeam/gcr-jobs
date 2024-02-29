@@ -33,14 +33,3 @@ jobs:
     uses: .github/workflows/version-up.yml
     secrets: inherit
     needs: publish
-#      - name: Push updated version
-#        run: |
-#          git config --global user.name "github_ci"
-#          git config --global user.email "aliaksandr.kasko.jazzteam@gmail.com"
-#          
-#          npm version patch
-#
-#          git add package*.json
-#          
-#          git commit -m "Version up [skip ci]"
-#          git push
