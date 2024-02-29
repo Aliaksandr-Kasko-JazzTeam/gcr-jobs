@@ -23,7 +23,7 @@
     "jobs",
     "gcloud"
   ],
-  "author": "Aliaksandr Kasko",
+  "author": "Aliaksandr Kasko <aliaksandr.kasko.jazzteam@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.7",
