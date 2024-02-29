@@ -1,0 +1,18 @@
+name: Version Up
+
+on:
+  workflow_call: 
+
+permissions:
+  contents: write
+  
+jobs:
+  version-up:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch version
+        uses: reedyuk/npm-version@1
+        with:
+          version: 'patch'
+          git-tag-version: true

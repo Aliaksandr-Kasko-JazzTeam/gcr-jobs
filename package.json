@@ -1,6 +1,6 @@
 {
   "name": "gcr-jobs",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Helper for usage Google Cloud Run Jobs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
