@@ -31,14 +31,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
       - name: Push updated version
         run: |
-          npm version patch
-          
           git config --global user.name "github_ci"
           git config --global user.email "aliaksandr.kasko.jazzteam@gmail.com"
+          
+          npm version patch
 
           git add git add package*.json
           
           git commit -m "Version up [skip ci]"
           git push
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
