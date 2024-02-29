@@ -19,7 +19,7 @@ jobs:
           node-version: '18'
       - name: Prepare .npmrc
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}}" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
       - name: Build
         run: |
           npm ci
