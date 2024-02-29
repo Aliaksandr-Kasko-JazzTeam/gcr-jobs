@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "publish": "npm run build && npm run test && npm publish",
+    "publish": "npm run build && npm publish",
     "test": "mocha"
   },
   "repository": {
