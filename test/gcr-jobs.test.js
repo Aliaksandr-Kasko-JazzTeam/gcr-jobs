@@ -22,6 +22,11 @@ describe('gcr-jobs', () => {
     expect(createdJob.spec.template.spec.template.spec.containers[0].image).to.equal(image);
   }).timeout(20000);
   
+  it('should run a job', async () => {
+    const success = await jobs.runJob(jobName);
+    expect(success).to.equal(true);
+  }).timeout(10000);
+  
   it('should receive jobs list', async () => {
     const listJobs = await jobs.listJobs();
     expect(listJobs).to.not.empty;
@@ -38,12 +43,12 @@ describe('gcr-jobs', () => {
   }).timeout(10000);
   
   it('should receive executions list for a single job', async () => {
-    const listExecutions = await jobs.listExecutions(process.env.JOB_NAME);
+    const listExecutions = await jobs.listExecutions(jobName);
     expect(listExecutions).to.not.empty;
   }).timeout(20000);
   
   it('should receive job execution health', async () => {
-    const jobExecutionHealth = await jobs.getJobExecutionHealth(process.env.JOB_NAME, 10);
+    const jobExecutionHealth = await jobs.getJobExecutionHealth(jobName, 10);
     expect(jobExecutionHealth).to.not.empty;
   }).timeout(10000);
   
