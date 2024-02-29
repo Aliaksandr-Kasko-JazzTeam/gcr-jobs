@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Build
+        run: npm ci
+      - name: Publish
+        run: |
+          npm publish
+          npm version patch
+      - name: Push updated version
+        run: |
+          git config --global user.name "github_ci"
+          git config --global user.email "aliaksandr.kasko.jazzteam@gmail.com"
+
+          git add git add package*.json
+          
+          git commit -m "Version up [skip ci]"
+          git push
+    
