@@ -40,4 +40,5 @@ jobs:
           
           git commit -m "Version up [skip ci]"
           git push
-    
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
