@@ -1,6 +1,6 @@
 {
   "name": "gcr-jobs",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Helper for usage Google Cloud Run Jobs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "build": "tsc",
-    "publish": "npm run build && npm publish",
     "test": "mocha"
   },
   "repository": {
