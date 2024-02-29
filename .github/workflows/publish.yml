@@ -24,6 +24,8 @@ jobs:
         run: |
           npm publish
           npm version patch
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
       - name: Push updated version
         run: |
           git config --global user.name "github_ci"
