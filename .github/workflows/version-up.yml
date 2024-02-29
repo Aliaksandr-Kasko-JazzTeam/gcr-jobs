@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Patch version
-        uses: reedyuk/npm-version@1
+        uses: reedyuk/npm-version@1.2.2
         with:
           version: 'patch'
           git-tag-version: true
