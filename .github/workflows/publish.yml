@@ -30,6 +30,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
   version-up:
-    uses: .github/workflows/version-up.yml
+    uses: ./.github/workflows/version-up.yml
     secrets: inherit
     needs: publish
