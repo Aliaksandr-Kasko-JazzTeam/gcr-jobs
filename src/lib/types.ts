@@ -237,11 +237,12 @@ export type Status = {
 export type CreateJobArgs = {
   jobName: string;
   image: string;
-  command: string[];
-  args: string[];
-  env: EnvVar[];
+  command?: string[];
+  args?: string[];
+  env?: EnvVar[];
   timeoutSeconds?: number;
   maxRetries?: number;
+  taskCount?: number;
   cpu?: "1000m"|"2000m"|"4000m";
   memory?: "512Mi" | "1Gi" | "2Gi" | "4Gi" | "8Gi" | "16Gi"
 }

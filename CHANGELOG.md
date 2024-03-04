@@ -1,3 +1,6 @@
+#### 1.2.8
+- Add support taskCount on createJob
+
 #### 1.2.1
 - Update dependencies
 - Add test for running a job

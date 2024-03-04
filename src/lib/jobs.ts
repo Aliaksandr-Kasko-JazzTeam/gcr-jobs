@@ -23,13 +23,14 @@ export class Jobs {
     const {
       jobName,
       image,
-      command = [],
-      args = [],
-      env = [],
-      timeoutSeconds = 600,
-      maxRetries = 3,
-      cpu = "1000m",
-      memory = "512Mi"
+      command,
+      args,
+      env,
+      timeoutSeconds,
+      maxRetries,
+      taskCount,
+      cpu,
+      memory
     } = createJobArgs;
     const config = await getAxiosConfig(this.projectName, this.serviceAccount);
     config.headers!["Content-Type"] = 'application/json';
@@ -44,7 +45,7 @@ export class Jobs {
       spec: {
         template: {
           spec: {
-            taskCount: 1,
+            taskCount: taskCount || 1,
             template: {
               spec: {
                 containers: [
@@ -55,16 +56,16 @@ export class Jobs {
                     env,
                     resources: {
                       limits: {
-                        cpu,
-                        memory
+                        cpu: cpu || "1000m",
+                        memory: memory || "512Mi"
                       }
                     },
                     
                   }
                 ],
-                timeoutSeconds: timeoutSeconds.toString(),
+                timeoutSeconds: (timeoutSeconds || 600).toString(),
                 serviceAccountName: this.serviceAccount,
-                maxRetries
+                maxRetries: maxRetries || 3
               }
             }
           }
@@ -86,7 +87,10 @@ export class Jobs {
     };
     const axios = new Axios({});
     try {
-      const response = await axios.get(JOBS_API_HOST + this.projectName + '/executions', config);
+      const response = await axios.get(
+        JOBS_API_HOST + this.projectName + '/executions',
+        config
+      );
       const data = JSON.parse(response.data);
       if (data.items?.length > 0) {
         const runningCount = data.items[0]?.status?.runningCount || 0;
@@ -101,7 +105,11 @@ export class Jobs {
     try {
       const config = await getAxiosConfig(this.projectName, this.serviceAccount);
       const axios = new Axios({});
-      const response = await axios.post(JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run', "", config);
+      const response = await axios.post(
+        JOBS_API_HOST + this.projectName + '/jobs/' + jobId + ':run',
+        "",
+        config
+      );
       return response.status == 200;
     } catch (e) {
       return false;
@@ -127,7 +135,10 @@ export class Jobs {
   async deleteJob(jobId: string): Promise<Operation> {
     const config = await getAxiosConfig(this.projectName, this.serviceAccount);
     const axios = new Axios({});
-    const axiosResponse = await axios.delete(JOBS_API_HOST + this.projectName + '/jobs/' + jobId, config);
+    const axiosResponse = await axios.delete(
+      JOBS_API_HOST + this.projectName + '/jobs/' + jobId,
+      config
+    );
     const parsedData = JSON.parse(axiosResponse.data);
     if (parsedData.error) throw Error(JSON.stringify(parsedData.error));
     return parsedData;
@@ -152,8 +163,10 @@ export class Jobs {
     
     return {
       executionCount: job.status?.executionCount || 0,
-      lastFailedCount: items?.slice(0, take).filter(execution => (execution?.status?.failedCount || 0) > 0).length || 0,
-      lastExecutionStatus: items[0]?.status?.conditions?.find(condition => condition.type == "Completed")?.status || "Unknown",
+      lastFailedCount: items?.slice(0, take)
+        .filter(execution => (execution?.status?.failedCount || 0) > 0).length || 0,
+      lastExecutionStatus: items[0]?.status?.conditions
+        ?.find(condition => condition.type == "Completed")?.status || "Unknown",
       startTime: items[0]?.status?.startTime,
       completionTime: items[0]?.status?.completionTime
     }
