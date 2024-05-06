@@ -1,3 +1,6 @@
+#### 1.2.9
+- Bump dependencies
+
 #### 1.2.8
 - Add support taskCount on createJob
 
