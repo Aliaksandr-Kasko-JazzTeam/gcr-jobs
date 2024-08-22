@@ -1,5 +1,9 @@
 # gcr-jobs
 
+## This project is no longer maintained
+Please use [@google-cloud/run](https://npmjs.com/package/@google-cloud/run) instead.
+
+
 Google Cloud Run Jobs Helper.  
 Allows you to run job and check if job is currently running.
 
